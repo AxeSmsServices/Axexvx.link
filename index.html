@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Axexvx.link — Shorten Smarter</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fff;
+    --bg2: #fafafa;
+    --surface: #fff;
+    --border: #eaeaea;
+    --border-dark: #d1d1d1;
+    --text: #000;
+    --text2: #111;
+    --muted: #666;
+    --muted2: #999;
+    --accent: #000;
+    --success: #0070f3;
+    --green: #12b76a;
+    --danger: #ee0000;
+    --radius: 6px;
+    --font: 'Inter', -apple-system, sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+
+  /* NAV — Vercel-style */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 24px; height: 64px;
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: saturate(180%) blur(5px);
+    border-bottom: 1px solid var(--border);
+  }
+  .logo { font-size: 1rem; font-weight: 700; color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 8px; letter-spacing: -0.02em; }
+  .logo-icon { width: 22px; height: 22px; background: var(--text); border-radius: 4px; display: flex; align-items: center; justify-content: center; }
+  .logo-icon svg { width: 12px; height: 12px; fill: #fff; }
+  .nav-center { display: flex; gap: 0; }
+  .nav-center a { color: var(--muted); text-decoration: none; font-size: 0.875rem; font-weight: 500; padding: 0 14px; height: 64px; display: flex; align-items: center; transition: color 0.15s; border-bottom: 2px solid transparent; }
+  .nav-center a:hover { color: var(--text); }
+  .nav-right { display: flex; align-items: center; gap: 10px; }
+  .btn-ghost-sm { background: transparent; border: 1px solid var(--border); color: var(--text); padding: 6px 14px; border-radius: var(--radius); font-size: 0.825rem; font-weight: 500; text-decoration: none; transition: border-color 0.15s; cursor: pointer; }
+  .btn-ghost-sm:hover { border-color: var(--border-dark); }
+  .btn-black { background: var(--text); color: #fff; border: 1px solid var(--text); padding: 6px 14px; border-radius: var(--radius); font-size: 0.825rem; font-weight: 500; text-decoration: none; transition: background 0.15s; cursor: pointer; }
+  .btn-black:hover { background: #333; }
+
+  /* HERO */
+  .hero { padding: 96px 24px 80px; text-align: center; border-bottom: 1px solid var(--border); }
+  .hero-label {
+    display: inline-flex; align-items: center; gap: 8px;
+    border: 1px solid var(--border); border-radius: 100px; padding: 4px 12px 4px 8px;
+    font-size: 0.775rem; color: var(--muted); margin-bottom: 28px;
+    animation: fadeUp 0.4s ease both;
+  }
+  .hero-label-badge { background: var(--text); color: #fff; border-radius: 100px; padding: 1px 8px; font-size: 0.7rem; font-weight: 600; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+
+  .hero h1 {
+    font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 800; letter-spacing: -0.04em;
+    line-height: 1.05; color: var(--text); max-width: 760px; margin: 0 auto;
+    animation: fadeUp 0.4s 0.06s ease both;
+  }
+  .hero h1 .gray { color: #999; }
+  .hero-desc {
+    margin: 20px auto 0; font-size: 1rem; color: var(--muted); max-width: 480px;
+    line-height: 1.65; animation: fadeUp 0.4s 0.12s ease both;
+  }
+
+  /* Shortener */
+  .shortener-wrap { margin: 40px auto 0; max-width: 640px; animation: fadeUp 0.4s 0.18s ease both; }
+  .input-group {
+    display: flex; border: 1px solid var(--border); border-radius: var(--radius);
+    overflow: hidden; transition: border-color 0.15s, box-shadow 0.15s;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  }
+  .input-group:focus-within { border-color: var(--border-dark); box-shadow: 0 0 0 3px rgba(0,0,0,0.05); }
+  .url-input {
+    flex: 1; border: none; outline: none; padding: 12px 16px;
+    font-family: var(--mono); font-size: 0.875rem; color: var(--text); background: var(--bg);
+  }
+  .url-input::placeholder { color: var(--muted2); }
+  .shorten-btn {
+    background: var(--text); color: #fff; border: none; padding: 12px 22px;
+    font-size: 0.875rem; font-weight: 600; cursor: pointer; font-family: var(--font);
+    transition: background 0.15s; white-space: nowrap;
+  }
+  .shorten-btn:hover { background: #222; }
+
+  .options-bar {
+    display: flex; align-items: center; gap: 8px; margin-top: 10px; flex-wrap: wrap;
+  }
+  .opt-label { font-size: 0.775rem; color: var(--muted); }
+  .alias-input {
+    border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 7px 11px; font-family: var(--mono); font-size: 0.8rem; color: var(--text);
+    outline: none; background: var(--bg); flex: 1; min-width: 130px; transition: border-color 0.15s;
+  }
+  .alias-input:focus { border-color: var(--border-dark); }
+  .alias-input::placeholder { color: var(--muted2); }
+  .domain-sel {
+    border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 7px 11px; font-family: var(--mono); font-size: 0.8rem; color: var(--text);
+    outline: none; background: var(--bg); cursor: pointer;
+  }
+  .result-bar {
+    display: none; margin-top: 10px;
+    border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 11px 14px; align-items: center; justify-content: space-between; gap: 12px;
+    background: var(--bg2);
+  }
+  .result-bar.show { display: flex; }
+  .result-link { font-family: var(--mono); font-size: 0.875rem; color: var(--success); word-break: break-all; }
+  .copy-btn {
+    border: 1px solid var(--border); background: var(--bg); border-radius: var(--radius);
+    padding: 6px 14px; font-size: 0.775rem; font-weight: 600; cursor: pointer; white-space: nowrap;
+    color: var(--text); transition: all 0.15s; font-family: var(--font);
+  }
+  .copy-btn:hover { background: var(--text); color: #fff; border-color: var(--text); }
+  .copy-btn.ok { background: var(--green); color: #fff; border-color: var(--green); }
+
+  /* Stats */
+  .stats-bar {
+    display: flex; max-width: 480px; margin: 40px auto 0;
+    border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;
+    animation: fadeUp 0.4s 0.24s ease both;
+  }
+  .stat-item { flex: 1; padding: 16px 12px; text-align: center; border-right: 1px solid var(--border); }
+  .stat-item:last-child { border-right: none; }
+  .stat-val { font-size: 1.25rem; font-weight: 700; color: var(--text); letter-spacing: -0.03em; }
+  .stat-lbl { font-size: 0.7rem; color: var(--muted); margin-top: 1px; font-weight: 500; }
+
+  /* Section */
+  section { padding: 72px 24px; border-bottom: 1px solid var(--border); }
+  .inner { max-width: 1080px; margin: 0 auto; }
+  .sec-label { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 10px; }
+  h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700; letter-spacing: -0.03em; line-height: 1.15; }
+  h2 .dim { color: var(--muted2); }
+
+  /* Features grid — Vercel-style borderless grid */
+  .feat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin-top: 48px; border-top: 1px solid var(--border); border-left: 1px solid var(--border); }
+  .feat-card { padding: 28px 24px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); transition: background 0.2s; }
+  .feat-card:hover { background: var(--bg2); }
+  .feat-icon { font-size: 1.1rem; margin-bottom: 12px; }
+  .feat-card h3 { font-size: 0.9rem; font-weight: 600; margin-bottom: 6px; }
+  .feat-card p { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
+
+  /* APK section — two col */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; margin-top: 48px; }
+  .col-text p { color: var(--muted); font-size: 0.9rem; line-height: 1.7; margin: 12px 0 20px; }
+  .tag-list { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 24px; }
+  .tag { border: 1px solid var(--border); border-radius: 100px; padding: 3px 11px; font-size: 0.75rem; font-family: var(--mono); color: var(--text2); }
+  .apk-info-card { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .info-row { display: flex; justify-content: space-between; padding: 11px 16px; border-bottom: 1px solid var(--border); font-size: 0.84rem; }
+  .info-row:last-child { border-bottom: none; }
+  .info-k { color: var(--muted); }
+  .info-v { font-family: var(--mono); font-weight: 500; }
+  .sec-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+  .sec-b { display: flex; align-items: center; gap: 5px; border: 1px solid var(--border); border-radius: var(--radius); padding: 5px 10px; font-size: 0.75rem; color: var(--muted); }
+  .sec-b .ok { color: var(--green); font-weight: 700; }
+
+  /* SMS */
+  .sms-form { border: 1px solid var(--border); border-radius: 8px; padding: 28px; margin-top: 36px; background: var(--bg2); }
+  .fg { margin-bottom: 18px; }
+  .fg label { display: block; font-size: 0.8rem; font-weight: 500; color: var(--text2); margin-bottom: 6px; }
+  .fc {
+    width: 100%; border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 9px 12px; font-family: var(--mono); font-size: 0.84rem; color: var(--text); background: var(--bg);
+    outline: none; transition: border-color 0.15s; resize: vertical;
+  }
+  .fc:focus { border-color: var(--border-dark); }
+  .fc::placeholder { color: var(--muted2); }
+  .two-fg { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .sms-counter { font-size: 0.72rem; color: var(--muted2); margin-top: 4px; }
+
+  /* Pricing */
+  .price-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin-top: 48px; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .price-card { padding: 28px 24px; border-right: 1px solid var(--border); position: relative; }
+  .price-card:last-child { border-right: none; }
+  .price-card.pop { background: var(--text); }
+  .pop-badge { display: inline-block; background: #fff; color: var(--text); border-radius: 100px; padding: 2px 10px; font-size: 0.7rem; font-weight: 700; margin-bottom: 14px; }
+  .pn { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 6px; }
+  .pop .pn { color: rgba(255,255,255,0.5); }
+  .pp { font-size: 2rem; font-weight: 700; letter-spacing: -0.04em; }
+  .pop .pp { color: #fff; }
+  .pp small { font-size: 0.8rem; font-weight: 400; color: var(--muted); }
+  .pop .pp small { color: rgba(255,255,255,0.45); }
+  .pf { list-style: none; margin: 20px 0; display: flex; flex-direction: column; gap: 8px; }
+  .pf li { font-size: 0.82rem; color: var(--muted); display: flex; gap: 8px; align-items: flex-start; }
+  .pop .pf li { color: rgba(255,255,255,0.65); }
+  .pf li::before { content: '✓'; font-size: 0.72rem; font-weight: 700; color: var(--text); flex-shrink: 0; margin-top: 1px; }
+  .pop .pf li::before { color: rgba(255,255,255,0.85); }
+  .pf li.no::before { content: '–'; color: var(--muted2); }
+  .pop .pf li.no::before { color: rgba(255,255,255,0.25); }
+  .pb {
+    display: block; width: 100%; padding: 9px; border-radius: var(--radius);
+    font-size: 0.84rem; font-weight: 600; text-align: center; cursor: pointer;
+    border: 1px solid var(--border); background: transparent; color: var(--text);
+    transition: all 0.15s; margin-top: 20px;
+  }
+  .pb:hover { background: var(--bg2); }
+  .pb-white { background: #fff; border-color: rgba(255,255,255,0.2); }
+  .pb-white:hover { background: #f4f4f4; }
+
+  /* Footer */
+  footer { padding: 48px 24px 32px; border-top: 1px solid var(--border); }
+  .foot-grid { display: grid; grid-template-columns: 2fr repeat(3,1fr); gap: 40px; max-width: 1080px; margin: 0 auto; }
+  .foot-brand p { font-size: 0.82rem; color: var(--muted); margin-top: 10px; line-height: 1.6; max-width: 220px; }
+  .foot-col h4 { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; }
+  .foot-col a { display: block; font-size: 0.84rem; color: var(--muted); text-decoration: none; margin-bottom: 8px; transition: color 0.15s; }
+  .foot-col a:hover { color: var(--text); }
+  .foot-bottom { max-width: 1080px; margin: 32px auto 0; padding-top: 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-size: 0.78rem; color: var(--muted); flex-wrap: wrap; gap: 8px; }
+  .status-dot { display: inline-flex; align-items: center; gap: 6px; }
+  .dot { width: 6px; height: 6px; background: var(--green); border-radius: 50%; }
+
+  /* Toast */
+  .toast {
+    position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+    background: var(--text); color: #fff; border-radius: var(--radius);
+    padding: 10px 18px; font-size: 0.84rem; font-weight: 500;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    transform: translateY(60px); opacity: 0; transition: all 0.25s;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  @media (max-width: 900px) {
+    .feat-grid { grid-template-columns: repeat(2, 1fr); }
+    .price-grid { grid-template-columns: repeat(2, 1fr); }
+    .price-card { border-bottom: 1px solid var(--border); }
+  }
+  @media (max-width: 640px) {
+    .nav-center { display: none; }
+    .feat-grid { grid-template-columns: 1fr; }
+    .price-grid { grid-template-columns: 1fr; }
+    .two-col { grid-template-columns: 1fr; }
+    .two-fg { grid-template-columns: 1fr; }
+    .foot-grid { grid-template-columns: 1fr 1fr; }
+    .input-group { flex-direction: column; }
+    .shorten-btn { text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 12 12"><polygon points="6,0 12,12 0,12"/></svg>
+    </div>
+    Axexvx.link
+  </a>
+  <div class="nav-center">
+    <a href="#features">Features</a>
+    <a href="#apk">APK</a>
+    <a href="#sms">SMS</a>
+    <a href="#pricing">Pricing</a>
+    <a href="docs.html">Docs</a>
+  </div>
+  <div class="nav-right">
+    <a href="#" class="btn-ghost-sm">Log In</a>
+    <a href="#pricing" class="btn-black">Get Started</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-label">
+    <span class="hero-label-badge">New</span>
+    APK Link Shortener + Bulk SMS — now live
+  </div>
+  <h1>The URL shortener<br>for <span class="gray">serious teams.</span></h1>
+  <p class="hero-desc">Shorten, track, and scale your links. Built for APK distribution, bulk SMS campaigns, and custom domain branding.</p>
+
+  <div class="shortener-wrap">
+    <div class="input-group">
+      <input type="url" class="url-input" id="urlInput" placeholder="https://your-long-url.com/or-apk-file-link.apk">
+      <button class="shorten-btn" onclick="shortenURL()">Shorten →</button>
+    </div>
+    <div class="options-bar">
+      <span class="opt-label">Custom alias:</span>
+      <input type="text" class="alias-input" id="aliasInput" placeholder="my-brand">
+      <select class="domain-sel" id="domainSelect">
+        <option value="axexvx.link">axexvx.link</option>
+        <option value="axvx.io">axvx.io ★ Pro</option>
+        <option value="yourname.link">custom ★ Business</option>
+      </select>
+    </div>
+    <div class="result-bar" id="resultBar">
+      <span class="result-link" id="resultLink"></span>
+      <button class="copy-btn" id="copyBtn" onclick="copyLink()">Copy</button>
+    </div>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat-item"><div class="stat-val">2.4B+</div><div class="stat-lbl">Links Shortened</div></div>
+    <div class="stat-item"><div class="stat-val">180+</div><div class="stat-lbl">Countries</div></div>
+    <div class="stat-item"><div class="stat-val">99.99%</div><div class="stat-lbl">Uptime</div></div>
+    <div class="stat-item"><div class="stat-val">&lt;1ms</div><div class="stat-lbl">Redirect</div></div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="inner">
+    <p class="sec-label">Capabilities</p>
+    <h2>Everything built in.<br><span class="dim">Nothing bolted on.</span></h2>
+    <div class="feat-grid">
+      <div class="feat-card"><div class="feat-icon">🔐</div><h3>Security First</h3><p>SSL on every link, malware scanning, phishing detection, and password-protected links for sensitive APK distribution.</p></div>
+      <div class="feat-card"><div class="feat-icon">📱</div><h3>APK File Links</h3><p>Shorten APK download URLs with built-in virus scanning, SHA256 verification, and smart device-based routing.</p></div>
+      <div class="feat-card"><div class="feat-icon">📊</div><h3>Real-time Analytics</h3><p>Clicks, geography, devices, referrers — all in a clean dashboard. Export to CSV anytime.</p></div>
+      <div class="feat-card"><div class="feat-icon">🌐</div><h3>Custom Domains</h3><p>Use your own brand domain. Point any domain to Axexvx and create white-label short links instantly.</p></div>
+      <div class="feat-card"><div class="feat-icon">📨</div><h3>Bulk SMS Campaigns</h3><p>Send thousands of personalized SMS with auto-shortened trackable links. Monitor delivery live.</p></div>
+      <div class="feat-card"><div class="feat-icon">📷</div><h3>QR Codes</h3><p>Auto-generate high-res QR codes for every link. Export as SVG or PNG — ready for print.</p></div>
+      <div class="feat-card"><div class="feat-icon">⚡</div><h3>Bulk Creation</h3><p>Upload CSV files to create thousands of unique short links in seconds. Perfect for large campaigns.</p></div>
+      <div class="feat-card"><div class="feat-icon">🔗</div><h3>API & Webhooks</h3><p>Full REST API with webhook support. Integrate into your apps, CRMs, and automation flows.</p></div>
+      <div class="feat-card"><div class="feat-icon">⏱</div><h3>Link Controls</h3><p>Set expiry dates, click limits, geo-targeting, device targeting. Full lifecycle control per link.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- APK -->
+<section id="apk">
+  <div class="inner">
+    <p class="sec-label">APK Distribution</p>
+    <h2>The safest way to<br><span class="dim">share APK files.</span></h2>
+    <div class="two-col">
+      <div class="col-text">
+        <p>Distribute Android apps securely with built-in virus scanning, version control, and smart routing — direct APK or Play Store based on device type.</p>
+        <div class="tag-list">
+          <span class="tag">Virus Scan</span>
+          <span class="tag">SHA256 Verify</span>
+          <span class="tag">Version Control</span>
+          <span class="tag">Smart Redirect</span>
+          <span class="tag">CDN Hosted</span>
+          <span class="tag">Download Stats</span>
+        </div>
+        <a href="#" class="btn-black" style="display:inline-flex;align-items:center;gap:8px;text-decoration:none;padding:10px 22px;border-radius:6px;font-size:0.875rem;font-weight:600" onclick="event.preventDefault();alert('Sign up to access APK hosting features!')">⬇ Download Axexvx App</a>
+        <div class="sec-badges">
+          <div class="sec-b"><span class="ok">✓</span> 256-bit SSL</div>
+          <div class="sec-b"><span class="ok">✓</span> GDPR Compliant</div>
+          <div class="sec-b"><span class="ok">✓</span> SOC 2 Type II</div>
+          <div class="sec-b"><span class="ok">✓</span> ISO 27001</div>
+        </div>
+      </div>
+      <div class="apk-info-card">
+        <div style="padding:14px 16px;border-bottom:1px solid var(--border);font-size:0.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em">App Details</div>
+        <div class="info-row"><span class="info-k">App Name</span><span class="info-v">Axexvx.link</span></div>
+        <div class="info-row"><span class="info-k">Version</span><span class="info-v">v2.4.1</span></div>
+        <div class="info-row"><span class="info-k">File Size</span><span class="info-v">18.2 MB</span></div>
+        <div class="info-row"><span class="info-k">Min Android</span><span class="info-v">8.0+</span></div>
+        <div class="info-row"><span class="info-k">SHA256</span><span class="info-v" style="font-size:0.72rem">a3f9c1...4e2c</span></div>
+        <div class="info-row"><span class="info-k">Scan Status</span><span class="info-v" style="color:var(--green)">✓ Clean</span></div>
+        <div class="info-row"><span class="info-k">Total Downloads</span><span class="info-v">124,831</span></div>
+        <div class="info-row"><span class="info-k">Last Updated</span><span class="info-v">Jun 1, 2025</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SMS -->
+<section id="sms">
+  <div class="inner" style="max-width:800px">
+    <p class="sec-label">SMS Campaigns</p>
+    <h2>Send bulk SMS with<br><span class="dim">smart short links.</span></h2>
+    <div class="sms-form">
+      <div class="two-fg">
+        <div class="fg"><label>Campaign Name</label><input type="text" class="fc" placeholder="Summer Sale 2025"></div>
+        <div class="fg"><label>Sender ID</label><input type="text" class="fc" placeholder="AXEXVX"></div>
+      </div>
+      <div class="fg">
+        <label>Phone Numbers <span style="color:var(--muted2);font-weight:400">(one per line or comma-separated)</span></label>
+        <textarea class="fc" rows="4" id="phoneNumbers" placeholder="+1234567890&#10;+0987654321&#10;+1122334455"></textarea>
+        <div class="sms-counter" id="smsCounter">0 numbers detected</div>
+      </div>
+      <div class="fg">
+        <label>Message <span style="color:var(--muted2);font-weight:400">— long URLs auto-shortened</span></label>
+        <textarea class="fc" rows="4" id="smsMessage" placeholder="Hi {name}! Download our app: https://long-link.com/app.apk — Reply STOP to opt out." oninput="updateSMSCount()"></textarea>
+        <div class="sms-counter" id="charCount">0 / 160 characters · 1 SMS</div>
+      </div>
+      <div class="two-fg">
+        <div class="fg"><label>Schedule <span style="color:var(--muted2);font-weight:400">(optional)</span></label><input type="datetime-local" class="fc"></div>
+        <div class="fg"><label>Short Domain</label><select class="fc"><option>axexvx.link</option><option>Custom Domain (Pro)</option></select></div>
+      </div>
+      <button class="btn-black" style="padding:10px 28px;border-radius:6px;font-size:0.875rem;font-weight:600;cursor:pointer" onclick="sendSMSCampaign()">Send Campaign →</button>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="inner">
+    <p class="sec-label">Plans & Pricing</p>
+    <h2>Start free.<br><span class="dim">Scale on your terms.</span></h2>
+    <div class="price-grid">
+      <div class="price-card">
+        <div class="pn">Free</div>
+        <div class="pp">$0 <small>/ mo</small></div>
+        <ul class="pf">
+          <li>500 links / month</li>
+          <li>Basic analytics</li>
+          <li>axexvx.link domain</li>
+          <li>QR code generator</li>
+          <li class="no">Custom domain</li>
+          <li class="no">SMS campaigns</li>
+          <li class="no">APK hosting</li>
+          <li class="no">API access</li>
+        </ul>
+        <button class="pb" onclick="signup('free')">Get Started</button>
+      </div>
+      <div class="price-card pop">
+        <div class="pop-badge">Most Popular</div>
+        <div class="pn">Pro</div>
+        <div class="pp">$12 <small>/ mo</small></div>
+        <ul class="pf">
+          <li>50,000 links / month</li>
+          <li>Advanced analytics</li>
+          <li>1 Custom domain</li>
+          <li>QR codes (HD SVG)</li>
+          <li>SMS: 5,000 msg/mo</li>
+          <li>APK hosting (5 apps)</li>
+          <li>Full API access</li>
+          <li class="no">White label</li>
+        </ul>
+        <button class="pb pb-white" onclick="signup('pro')">Start Pro</button>
+      </div>
+      <div class="price-card">
+        <div class="pn">Business</div>
+        <div class="pp">$49 <small>/ mo</small></div>
+        <ul class="pf">
+          <li>Unlimited links</li>
+          <li>Full analytics suite</li>
+          <li>5 Custom domains</li>
+          <li>SMS: 50,000 msg/mo</li>
+          <li>APK hosting (50 apps)</li>
+          <li>Team seats (10)</li>
+          <li>Priority API</li>
+          <li>Webhooks</li>
+        </ul>
+        <button class="pb" onclick="signup('business')">Go Business</button>
+      </div>
+      <div class="price-card">
+        <div class="pn">Enterprise</div>
+        <div class="pp" style="font-size:1.6rem">Custom</div>
+        <ul class="pf">
+          <li>Unlimited everything</li>
+          <li>White-label platform</li>
+          <li>Unlimited domains</li>
+          <li>SMS: Unlimited</li>
+          <li>Dedicated CDN</li>
+          <li>SSO & SAML</li>
+          <li>SLA 99.99%</li>
+          <li>24/7 Support</li>
+        </ul>
+        <button class="pb" onclick="contactSales()">Contact Sales</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-grid">
+    <div class="foot-brand">
+      <a href="index.html" class="logo" style="font-size:0.95rem">
+        <div class="logo-icon"><svg viewBox="0 0 12 12"><polygon points="6,0 12,12 0,12"/></svg></div>
+        Axexvx.link
+      </a>
+      <p>The complete link intelligence platform for modern teams.</p>
+    </div>
+    <div class="foot-col">
+      <h4>Product</h4>
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#sms">SMS Bulk</a>
+      <a href="#apk">APK Hosting</a>
+      <a href="docs.html">API Docs</a>
+    </div>
+    <div class="foot-col">
+      <h4>Legal</h4>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms of Service</a>
+      <a href="privacy.html#cookies">Cookie Policy</a>
+      <a href="mailto:hello@axexvx.link">Contact</a>
+    </div>
+    <div class="foot-col">
+      <h4>Developers</h4>
+      <a href="docs.html">API Reference</a>
+      <a href="docs.html#webhooks">Webhooks</a>
+      <a href="docs.html#sdks">SDKs</a>
+      <a href="docs.html#status">Status</a>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span>© 2025 Axexvx.link</span>
+    <span class="status-dot"><span class="dot"></span> All systems operational</span>
+  </div>
+</footer>
+
+<div class="toast" id="toast">Copied to clipboard</div>
+
+<script>
+  function randomCode(n=6){const c='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';return Array.from({length:n},()=>c[Math.floor(Math.random()*c.length)]).join('');}
+
+  function shortenURL() {
+    const url = document.getElementById('urlInput').value.trim();
+    const alias = document.getElementById('aliasInput').value.trim();
+    const domain = document.getElementById('domainSelect').value;
+    if (!url) { alert('Please enter a URL.'); return; }
+    if (!url.startsWith('http://') && !url.startsWith('https://')) { alert('URL must start with http:// or https://'); return; }
+    const code = alias || randomCode();
+    document.getElementById('resultLink').textContent = `https://${domain}/${code}`;
+    document.getElementById('resultBar').classList.add('show');
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = 'Copy'; btn.classList.remove('ok');
+  }
+
+  function copyLink() {
+    const url = document.getElementById('resultLink').textContent;
+    navigator.clipboard.writeText(url).then(() => {
+      const btn = document.getElementById('copyBtn');
+      btn.textContent = 'Copied!'; btn.classList.add('ok');
+      const t = document.getElementById('toast');
+      t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2000);
+    });
+  }
+
+  function updateSMSCount() {
+    const len = document.getElementById('smsMessage').value.length;
+    document.getElementById('charCount').textContent = `${len} / 160 characters · ${Math.ceil(len/160)||1} SMS per recipient`;
+  }
+
+  document.getElementById('phoneNumbers')?.addEventListener('input', function() {
+    const nums = this.value.trim() ? this.value.trim().split(/[\n,]+/).map(n=>n.trim()).filter(n=>n.length>5) : [];
+    document.getElementById('smsCounter').textContent = `${nums.length} number${nums.length!==1?'s':''} detected`;
+  });
+
+  function sendSMSCampaign() {
+    if (!document.getElementById('phoneNumbers').value.trim()) { alert('Please add phone numbers.'); return; }
+    if (!document.getElementById('smsMessage').value.trim()) { alert('Please write your message.'); return; }
+    alert('Campaign queued. You will receive a delivery report once sending completes.\n\n(Pro or Business plan required for live SMS sending.)');
+  }
+
+  function signup(plan) { alert(`Starting ${plan.charAt(0).toUpperCase()+plan.slice(1)} plan signup.\n\nIn production, this opens the registration flow.`); }
+  function contactSales() { window.location.href='mailto:sales@axexvx.link?subject=Enterprise Inquiry'; }
+</script>
+</body>
+</html>
