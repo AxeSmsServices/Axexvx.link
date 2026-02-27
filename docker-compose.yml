@@ -1,0 +1,52 @@
+version: '3.9'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: axexvx-link
+    restart: unless-stopped
+    ports:
+      - "${PORT:-3000}:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      BASE_DOMAIN: ${BASE_DOMAIN:-axexvx.link}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-*}
+    volumes:
+      # Persist SQLite database outside container
+      - axexvx_data:/app/data
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    networks:
+      - axexvx_net
+
+  # Optional: Nginx reverse proxy (uncomment for production with SSL)
+  # nginx:
+  #   image: nginx:alpine
+  #   container_name: axexvx-nginx
+  #   restart: unless-stopped
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   volumes:
+  #     - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+  #     - /etc/letsencrypt:/etc/letsencrypt:ro
+  #   depends_on:
+  #     - app
+  #   networks:
+  #     - axexvx_net
+
+volumes:
+  axexvx_data:
+    driver: local
+
+networks:
+  axexvx_net:
+    driver: bridge

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>API Docs — Axexvx.link</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fff; --bg2: #fafafa; --border: #eaeaea; --border-dark: #d1d1d1;
+    --text: #000; --text2: #111; --muted: #666; --muted2: #999;
+    --success: #12b76a; --danger: #ee0000; --blue: #0070f3; --amber: #d97706;
+    --font: 'Inter', sans-serif; --mono: 'JetBrains Mono', monospace; --radius: 6px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font); -webkit-font-smoothing: antialiased; display: flex; min-height: 100vh; }
+
+  /* Sidebar */
+  .sidebar {
+    position: fixed; top: 0; left: 0; bottom: 0; width: 240px;
+    background: var(--bg2); border-right: 1px solid var(--border);
+    padding: 0; overflow-y: auto; z-index: 10;
+  }
+  .sidebar-head { padding: 20px 20px 16px; border-bottom: 1px solid var(--border); }
+  .logo { font-size: 0.95rem; font-weight: 700; color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+  .logo-icon { width: 20px; height: 20px; background: var(--text); border-radius: 4px; display: flex; align-items: center; justify-content: center; }
+  .logo-icon svg { width: 10px; height: 10px; fill: #fff; }
+  .sidebar-section { padding: 16px 20px 4px; }
+  .sidebar-section-title { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted2); margin-bottom: 6px; }
+  .sidebar-section a { display: block; font-size: 0.825rem; color: var(--muted); text-decoration: none; padding: 5px 8px; border-radius: 4px; margin-bottom: 1px; transition: all 0.15s; }
+  .sidebar-section a:hover { background: var(--border); color: var(--text); }
+  .sidebar-section a.active { background: var(--text); color: #fff; }
+
+  /* Main */
+  .main { margin-left: 240px; flex: 1; padding: 48px 56px; max-width: calc(100% - 240px); }
+  .doc-head { margin-bottom: 40px; padding-bottom: 32px; border-bottom: 1px solid var(--border); }
+  .doc-head h1 { font-size: 2rem; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 8px; }
+  .doc-head p { color: var(--muted); font-size: 0.9rem; line-height: 1.7; }
+
+  h2 { font-size: 1.25rem; font-weight: 700; letter-spacing: -0.02em; margin: 40px 0 12px; padding-top: 40px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { font-size: 0.95rem; font-weight: 600; margin: 24px 0 10px; }
+  p { color: var(--muted); font-size: 0.875rem; line-height: 1.7; margin-bottom: 12px; }
+  ul, ol { color: var(--muted); padding-left: 1.25rem; margin-bottom: 12px; }
+  li { font-size: 0.875rem; line-height: 1.7; margin-bottom: 3px; }
+
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-family: var(--mono); font-size: 0.72rem; font-weight: 600; margin-right: 6px; }
+  .b-get { background: rgba(18,183,106,0.12); color: var(--success); }
+  .b-post { background: rgba(0,112,243,0.1); color: var(--blue); }
+  .b-del { background: rgba(238,0,0,0.1); color: var(--danger); }
+  .b-put { background: rgba(217,119,6,0.1); color: var(--amber); }
+
+  .endpoint-box { border: 1px solid var(--border); border-radius: 8px; margin: 16px 0; overflow: hidden; }
+  .endpoint-head { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: var(--bg2); border-bottom: 1px solid var(--border); }
+  .endpoint-path { font-family: var(--mono); font-size: 0.84rem; color: var(--text2); }
+
+  pre {
+    background: #0a0a0a; color: #e4e4e4; border: 1px solid #222;
+    border-radius: 8px; padding: 20px; font-family: var(--mono);
+    font-size: 0.8rem; line-height: 1.8; overflow-x: auto; margin: 12px 0;
+  }
+  .kw { color: #c678dd; } .str { color: #98c379; } .cm { color: #5c6370; }
+  .key { color: #61afef; } .num { color: #d19a66; }
+
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.84rem; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  th { text-align: left; padding: 10px 14px; background: var(--bg2); color: var(--muted); font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; border-bottom: 1px solid var(--border); }
+  td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--muted); }
+  tr:last-child td { border-bottom: none; }
+  td:first-child { font-family: var(--mono); color: var(--text2); font-size: 0.8rem; }
+
+  .alert { padding: 12px 16px; border-radius: 8px; margin: 16px 0; font-size: 0.84rem; color: var(--text2); }
+  .alert-info { background: rgba(0,112,243,0.06); border-left: 3px solid var(--blue); }
+  .alert-warn { background: rgba(217,119,6,0.07); border-left: 3px solid var(--amber); }
+
+  code { font-family: var(--mono); font-size: 0.82em; background: var(--bg2); border: 1px solid var(--border); border-radius: 3px; padding: 1px 5px; color: var(--text2); }
+
+  @media (max-width: 768px) { .sidebar { display: none; } .main { margin-left: 0; max-width: 100%; padding: 24px; } }
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-head">
+    <a href="index.html" class="logo">
+      <div class="logo-icon"><svg viewBox="0 0 12 12"><polygon points="6,0 12,12 0,12"/></svg></div>
+      Axexvx.link
+    </a>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">Getting Started</div>
+    <a href="#intro" class="active">Introduction</a>
+    <a href="#auth">Authentication</a>
+    <a href="#ratelimits">Rate Limits</a>
+    <a href="#errors">Error Codes</a>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">Links API</div>
+    <a href="#create-link">Create Link</a>
+    <a href="#get-link">Get Link</a>
+    <a href="#update-link">Update Link</a>
+    <a href="#delete-link">Delete Link</a>
+    <a href="#list-links">List Links</a>
+    <a href="#bulk-links">Bulk Create</a>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">Analytics</div>
+    <a href="#analytics">Click Analytics</a>
+    <a href="#geo">Geo Data</a>
+    <a href="#devices">Device Stats</a>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">SMS API</div>
+    <a href="#sms-send">Send SMS</a>
+    <a href="#sms-bulk">Bulk SMS</a>
+    <a href="#sms-status">Campaign Status</a>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">Other</div>
+    <a href="#domains">Custom Domains</a>
+    <a href="#webhooks">Webhooks</a>
+    <a href="#sdks">SDKs</a>
+    <a href="#status">Status</a>
+  </div>
+</aside>
+
+<main class="main">
+  <div class="doc-head">
+    <h1>API Documentation</h1>
+    <p>Full REST API reference for Axexvx.link. Build powerful link shortening, analytics, and SMS campaigns programmatically.</p>
+  </div>
+
+  <h2 id="intro">Introduction</h2>
+  <p>The Axexvx.link API is a RESTful interface for creating and managing short links, accessing analytics, managing SMS campaigns, and controlling custom domains.</p>
+  <h3>Base URL</h3>
+  <pre>https://api.axexvx.link/v1</pre>
+  <p>All responses are in JSON. All requests must use HTTPS.</p>
+
+  <h2 id="auth">Authentication</h2>
+  <p>Authenticate using your API key in the <code>Authorization</code> header. Get your key from Settings → API in the dashboard.</p>
+  <pre><span class="cm"># Include in every request header</span>
+Authorization: Bearer <span class="str">axvx_live_xxxxxxxxxxxxxxxxxxxx</span></pre>
+
+  <div class="alert alert-warn">⚠️ Keep your API key secret. Never expose it in client-side code or public repositories. Rotate immediately if compromised.</div>
+
+  <h3>API Key Types</h3>
+  <table>
+    <tr><th>Type</th><th>Prefix</th><th>Access Level</th></tr>
+    <tr><td>Live Key</td><td>axvx_live_</td><td>Full production access</td></tr>
+    <tr><td>Test Key</td><td>axvx_test_</td><td>Sandbox only, no real SMS</td></tr>
+    <tr><td>Read-Only</td><td>axvx_ro_</td><td>GET requests only</td></tr>
+  </table>
+
+  <h2 id="ratelimits">Rate Limits</h2>
+  <table>
+    <tr><th>Plan</th><th>Requests / min</th><th>Requests / day</th></tr>
+    <tr><td>Free</td><td>10</td><td>1,000</td></tr>
+    <tr><td>Pro</td><td>60</td><td>50,000</td></tr>
+    <tr><td>Business</td><td>300</td><td>500,000</td></tr>
+    <tr><td>Enterprise</td><td>Unlimited</td><td>Unlimited</td></tr>
+  </table>
+  <p>Rate limit status is returned in response headers: <code>X-RateLimit-Remaining</code>, <code>X-RateLimit-Reset</code>.</p>
+
+  <h2 id="create-link">Create Short Link</h2>
+  <div class="endpoint-box">
+    <div class="endpoint-head"><span class="badge b-post">POST</span><span class="endpoint-path">/links</span></div>
+  </div>
+  <h3>Request Body</h3>
+  <table>
+    <tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr>
+    <tr><td>url</td><td>string</td><td>✓</td><td>Destination URL to shorten</td></tr>
+    <tr><td>alias</td><td>string</td><td>—</td><td>Custom slug. Auto-generated if omitted.</td></tr>
+    <tr><td>domain</td><td>string</td><td>—</td><td>Custom domain (Pro+). Defaults to axexvx.link</td></tr>
+    <tr><td>expires_at</td><td>ISO 8601</td><td>—</td><td>Link expiration datetime</td></tr>
+    <tr><td>password</td><td>string</td><td>—</td><td>Password-protect the link</td></tr>
+    <tr><td>max_clicks</td><td>integer</td><td>—</td><td>Disable after N clicks</td></tr>
+    <tr><td>tags</td><td>string[]</td><td>—</td><td>Tags for organization</td></tr>
+  </table>
+  <h3>Example Request</h3>
+  <pre><span class="kw">curl</span> -X POST https://api.axexvx.link/v1/links \
+  -H <span class="str">"Authorization: Bearer axvx_live_YOUR_KEY"</span> \
+  -H <span class="str">"Content-Type: application/json"</span> \
+  -d <span class="str">'{
+    "url": "https://example.com/download/app.apk",
+    "alias": "myapp-v2",
+    "domain": "axexvx.link",
+    "expires_at": "2025-12-31T23:59:59Z",
+    "tags": ["apk", "android"]
+  }'</span></pre>
+  <h3>Response</h3>
+  <pre>{
+  <span class="key">"id"</span>: <span class="str">"lnk_9xKmP3aQ"</span>,
+  <span class="key">"short_url"</span>: <span class="str">"https://axexvx.link/myapp-v2"</span>,
+  <span class="key">"destination"</span>: <span class="str">"https://example.com/download/app.apk"</span>,
+  <span class="key">"alias"</span>: <span class="str">"myapp-v2"</span>,
+  <span class="key">"qr_code"</span>: <span class="str">"https://api.axexvx.link/v1/qr/myapp-v2.png"</span>,
+  <span class="key">"clicks"</span>: <span class="num">0</span>,
+  <span class="key">"expires_at"</span>: <span class="str">"2025-12-31T23:59:59Z"</span>,
+  <span class="key">"created_at"</span>: <span class="str">"2025-06-01T10:23:00Z"</span>
+}</pre>
+
+  <h2 id="bulk-links">Bulk Create Links</h2>
+  <div class="endpoint-box">
+    <div class="endpoint-head"><span class="badge b-post">POST</span><span class="endpoint-path">/links/bulk</span></div>
+  </div>
+  <p>Create up to 1,000 short links in a single request. Useful for large campaigns and APK distribution.</p>
+  <pre>{
+  <span class="key">"links"</span>: [
+    { <span class="key">"url"</span>: <span class="str">"https://example.com/page1"</span>, <span class="key">"tags"</span>: [<span class="str">"batch1"</span>] },
+    { <span class="key">"url"</span>: <span class="str">"https://example.com/page2"</span>, <span class="key">"alias"</span>: <span class="str">"page2-short"</span> },
+    { <span class="key">"url"</span>: <span class="str">"https://example.com/app.apk"</span>, <span class="key">"tags"</span>: [<span class="str">"apk"</span>] }
+  ]
+}</pre>
+
+  <h2 id="analytics">Click Analytics</h2>
+  <div class="endpoint-box">
+    <div class="endpoint-head"><span class="badge b-get">GET</span><span class="endpoint-path">/links/{id}/analytics</span></div>
+  </div>
+  <table>
+    <tr><th>Query Param</th><th>Default</th><th>Description</th></tr>
+    <tr><td>period</td><td>7d</td><td>1d, 7d, 30d, 90d, custom</td></tr>
+    <tr><td>from</td><td>—</td><td>Start date (ISO 8601)</td></tr>
+    <tr><td>to</td><td>—</td><td>End date (ISO 8601)</td></tr>
+    <tr><td>granularity</td><td>day</td><td>hour, day, week, month</td></tr>
+  </table>
+  <pre>{
+  <span class="key">"total_clicks"</span>: <span class="num">4821</span>,
+  <span class="key">"unique_clicks"</span>: <span class="num">3104</span>,
+  <span class="key">"timeseries"</span>: [
+    { <span class="key">"date"</span>: <span class="str">"2025-06-01"</span>, <span class="key">"clicks"</span>: <span class="num">234</span>, <span class="key">"unique"</span>: <span class="num">189</span> }
+  ],
+  <span class="key">"top_countries"</span>: [{ <span class="key">"country"</span>: <span class="str">"US"</span>, <span class="key">"clicks"</span>: <span class="num">1820</span> }],
+  <span class="key">"top_devices"</span>: [{ <span class="key">"device"</span>: <span class="str">"Mobile"</span>, <span class="key">"percent"</span>: <span class="num">74.2</span> }]
+}</pre>
+
+  <h2 id="sms-send">Send SMS</h2>
+  <div class="endpoint-box">
+    <div class="endpoint-head"><span class="badge b-post">POST</span><span class="endpoint-path">/sms/send</span></div>
+  </div>
+  <p>Send SMS with an auto-shortened link. Requires Pro or Business plan.</p>
+  <pre>{
+  <span class="key">"to"</span>: [<span class="str">"+12025550123"</span>, <span class="str">"+442071234567"</span>],
+  <span class="key">"message"</span>: <span class="str">"Download our app: {short_link} — Reply STOP to opt out."</span>,
+  <span class="key">"url_to_shorten"</span>: <span class="str">"https://example.com/app.apk"</span>,
+  <span class="key">"sender_id"</span>: <span class="str">"AXEXVX"</span>,
+  <span class="key">"schedule_at"</span>: <span class="str">"2025-07-01T09:00:00Z"</span>
+}</pre>
+
+  <h2 id="sms-bulk">Bulk SMS Campaign</h2>
+  <div class="endpoint-box">
+    <div class="endpoint-head"><span class="badge b-post">POST</span><span class="endpoint-path">/sms/bulk</span></div>
+  </div>
+  <p>Send personalized SMS to up to 100,000 recipients. Supports <code>{name}</code>, <code>{short_link}</code>, and custom variable interpolation.</p>
+  <pre>{
+  <span class="key">"campaign_name"</span>: <span class="str">"App Launch Q3"</span>,
+  <span class="key">"message_template"</span>: <span class="str">"Hi {name}, download our app: {short_link}"</span>,
+  <span class="key">"url_to_shorten"</span>: <span class="str">"https://example.com/app-v2.apk"</span>,
+  <span class="key">"recipients"</span>: [
+    { <span class="key">"phone"</span>: <span class="str">"+12025550101"</span>, <span class="key">"name"</span>: <span class="str">"Alice"</span> },
+    { <span class="key">"phone"</span>: <span class="str">"+442071234500"</span>, <span class="key">"name"</span>: <span class="str">"Bob"</span> }
+  ]
+}</pre>
+
+  <h2 id="webhooks">Webhooks</h2>
+  <p>Receive real-time HTTP POST notifications when events occur on your links or SMS campaigns.</p>
+  <table>
+    <tr><th>Event</th><th>Description</th></tr>
+    <tr><td>link.clicked</td><td>A short link was visited</td></tr>
+    <tr><td>link.expired</td><td>A link reached its expiry or max clicks</td></tr>
+    <tr><td>sms.delivered</td><td>An SMS was successfully delivered</td></tr>
+    <tr><td>sms.failed</td><td>An SMS delivery failed</td></tr>
+    <tr><td>campaign.completed</td><td>Bulk SMS campaign finished sending</td></tr>
+  </table>
+  <div class="alert alert-info">🔒 All webhook payloads are signed with HMAC-SHA256. Always verify the <code>X-Axexvx-Signature</code> header before processing.</div>
+
+  <h2 id="sdks">SDKs</h2>
+  <pre><span class="cm"># Node.js</span>
+<span class="kw">npm</span> install @axexvx/sdk
+
+<span class="cm"># Python</span>
+<span class="kw">pip</span> install axexvx
+
+<span class="cm"># PHP</span>
+<span class="kw">composer</span> require axexvx/php-sdk
+
+<span class="cm"># Go</span>
+<span class="kw">go get</span> github.com/axexvx/go-sdk</pre>
+
+  <h3>Node.js Example</h3>
+  <pre><span class="kw">import</span> Axexvx <span class="kw">from</span> <span class="str">'@axexvx/sdk'</span>;
+
+<span class="kw">const</span> client = <span class="kw">new</span> Axexvx(<span class="str">'axvx_live_YOUR_KEY'</span>);
+
+<span class="kw">const</span> link = <span class="kw">await</span> client.links.create({
+  url: <span class="str">'https://example.com/app.apk'</span>,
+  alias: <span class="str">'my-app'</span>,
+  tags: [<span class="str">'apk'</span>, <span class="str">'android'</span>]
+});
+
+console.log(link.short_url); <span class="cm">// https://axexvx.link/my-app</span></pre>
+
+  <h2 id="errors">Error Codes</h2>
+  <table>
+    <tr><th>HTTP Status</th><th>Code</th><th>Meaning</th></tr>
+    <tr><td>400</td><td>invalid_url</td><td>URL is malformed or unsafe</td></tr>
+    <tr><td>401</td><td>unauthorized</td><td>Missing or invalid API key</td></tr>
+    <tr><td>403</td><td>forbidden</td><td>Plan does not include this feature</td></tr>
+    <tr><td>404</td><td>not_found</td><td>Link or resource not found</td></tr>
+    <tr><td>409</td><td>alias_taken</td><td>Custom alias already in use</td></tr>
+    <tr><td>422</td><td>malware_detected</td><td>Destination URL flagged by security scanner</td></tr>
+    <tr><td>429</td><td>rate_limited</td><td>Too many requests</td></tr>
+    <tr><td>500</td><td>server_error</td><td>Internal error, try again</td></tr>
+  </table>
+</main>
+</body>
+</html>
